@@ -16,9 +16,6 @@ b2 = Function('b2')(t)
 b1aexp = a1 * cos(theta) + a2 * sin(theta)
 b2aexp = -a1 * sin(theta) + a2 * cos(theta)
 
-aexps_from_bexps = solve([Eq(b1, b1aexp), Eq(b2, b2aexp)], a1, a2)
-a1bexp, a2bexp = [aexps_from_bexps[a] for a in (a1, a2)]
-
 ### Single pendulum ###
 
 # kinematics for point Q (tip of the single pendulum)
