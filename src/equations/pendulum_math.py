@@ -1,16 +1,6 @@
 #!/usr/bin/env python3
 from sympy import *
-
-def printJS(name, exp):
-    import re
-    s = str(exp)
-    s = re.sub(r"\(t\)", "", s)
-    s = re.sub(r"Derivative\(theta([0-9]), t\)", r"theta\1Dot", s)
-    s = re.sub(r"Derivative\(theta([0-9]), \(t, 2\)\)", r"theta\1DotDot", s)
-    s = re.sub(r"theta", "\u03B8", s)
-    name = re.sub(r"theta", "\u03B8", name)
-    print('const ' + name + ' = ')
-    print(s)
+from print_js import printJS
 
 (t, g) = symbols('t, g') # time, gravity
 (L1, L2) = symbols('L1:3') # lengths of bars

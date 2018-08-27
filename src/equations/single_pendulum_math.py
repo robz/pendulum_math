@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from sympy import *
+from print_js import printJS
 
 # time, gravity, length, mass, tension
 (t, g, L, m, T) = symbols('t, g, L, m, T')
@@ -48,4 +49,4 @@ print(forceQ)
 
 # solve for thetadotdot
 thetaDotDot = solve(forceQ, Derivative(theta, (t, 2)))[0]
-print(thetaDotDot)
+printJS('thetaDotDot', thetaDotDot)
