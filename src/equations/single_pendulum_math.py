@@ -25,28 +25,23 @@ a1bexp, a2bexp = [aexps_from_bexps[a] for a in (a1, a2)]
 posQ = L * b1
 velQ = diff(posQ, t)
 accelQ = diff(velQ, t)
-print(accelQ)
+printJS('kinematics', accelQ, False)
 
-# initial equation for forces on point Q
+# f=ma for point Q
 forceQ = Eq(m * accelQ, (m * g * a1) - (T * b1))
-print(forceQ)
+printJS('force', forceQ, False)
 
-# substitue b basis for a basis
-forceQ = forceQ.subs([(b1, b1aexp), (b2, b2aexp)])
-print(forceQ)
+# convert from basis b to basis a, and execute derivatives
+forceQ = forceQ.subs([
+    (b1, b1aexp),
+    (b2, b2aexp),
+]).doit()
 
-# take the derivative (with respect to t)
-forceQ = forceQ.doit()
-print(forceQ)
-
-# substitute a basis for b basis
-forceQ = forceQ.subs([(a1, a1bexp), (a2, a2bexp)])
-print(forceQ)
-
-# take the dot product with b2
-forceQ = forceQ.subs([(b1, 0), (b2, 1)])
-print(forceQ)
+# expand to 2 equations for each basis (dot each with a1 and a2)
+eq1 = forceQ.subs([(a1, 0), (a2, 1)]).simplify();
+eq2 = forceQ.subs([(a1, 1), (a2, 0)]).simplify();
 
 # solve for thetadotdot
-thetaDotDot = solve(forceQ, Derivative(theta, (t, 2)))[0]
-printJS('thetaDotDot', thetaDotDot)
+thetaDotDotSymbol = Derivative(theta, (t, 2));
+thetaDotDot = solve([eq1, eq2], T, thetaDotDotSymbol)[thetaDotDotSymbol]
+printJS('thetaDotDot', thetaDotDot, False)
