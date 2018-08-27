@@ -2,8 +2,8 @@
 from sympy import *
 from print_js import printJS
 
-# time, gravity, length, mass, tension
-(t, g, L, m, T) = symbols('t, g, L, m, T')
+# time, gravity, length, mass, tension, external force
+(t, g, L, m, T, F) = symbols('t, g, L, m, T, F')
 (a1, a2) = symbols('a1:3') # base basis
 
 # angle
@@ -25,7 +25,7 @@ accelQ = diff(velQ, t)
 printJS('kinematics', accelQ, False)
 
 # f=ma for point Q
-forceQ = Eq(m * accelQ, (m * g * a1) - (T * b1))
+forceQ = Eq(m * accelQ, (m * g * a1) - (T * b1 + F * b2))
 printJS('force', forceQ, False)
 
 # convert from basis b to basis a, and execute derivatives

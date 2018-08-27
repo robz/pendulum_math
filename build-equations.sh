@@ -15,7 +15,7 @@ yarn prettier $f --print-width=75 --write
 cat $f
 
 echo 'const {sin, cos} = Math; const g = 9.8;' > src/ui/calcThetaDotDots.js
-echo 'function calcThetaDotDots({ θ1, θ2, θ1Dot, θ2Dot }, { L1, L2, m1, m2 }) {' >> src/ui/calcThetaDotDots.js
+echo 'function calcThetaDotDots({θ1, θ2, θ1Dot, θ2Dot}, {L1, L2, m1, m2}, {F}) {' >> src/ui/calcThetaDotDots.js
 cat $f >> src/ui/calcThetaDotDots.js
 echo 'return { θ1DotDot, θ2DotDot }; }' >> src/ui/calcThetaDotDots.js
 

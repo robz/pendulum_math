@@ -51,7 +51,8 @@ function draw(ctx, width, height, {theta1, theta2}, {L1, L2}, color) {
 }
 
 function calcEnergy({theta1, theta2, theta1Dot, theta2Dot}, {L1, L2, m1, m2}) {
-  const kineticEnergy = 0.5 * (m1 * (L1 * theta1Dot) ** 2 + m2 * (L2 * theta2Dot) ** 2);
+  const kineticEnergy =
+    0.5 * (m1 * (L1 * theta1Dot) ** 2 + m2 * (L2 * theta2Dot) ** 2);
   const y1 = L1 * Math.cos(theta1);
   const y2 = L2 * Math.cos(theta1 + theta2);
   const height1 = L1 - y1;
@@ -117,6 +118,9 @@ function stepRungeKutta({theta1, theta2, theta1Dot, theta2Dot}, config, h) {
         theta2Dot: y[3],
       },
       config,
+      {
+        F: 0,
+      },
     );
     return [y[2], y[3], theta1DotDot, theta2DotDot];
   };

@@ -7,6 +7,7 @@ from print_js import printJS
 (m1, m2) = symbols('m1:3') # point masses
 (a1, a2) = symbols('a1:3') # base basis
 (T1, T2) = symbols('T1:3') # tensions
+F = Symbol('F') # acrobot force
 
 # angles
 theta1 = Function('theta1')(t)
@@ -36,8 +37,8 @@ posR = posQ + L2 * c1
 velR = diff(posR, t)
 accelR = diff(velR, t)
 
-# F=ma for point R and Q
-eq1 = Eq(m2 * accelR, m2 * g * a1 - T2 * c1)
+# f=ma for point R and Q
+eq1 = Eq(m2 * accelR, m2 * g * a1 - T2 * c1 + F * c2)
 eq2 = Eq(m1 * accelQ, m1 * g * a1 - T1 * b1 + T2 * c1)
 
 # convert from basis b and c to basis a, and execute derivatives
