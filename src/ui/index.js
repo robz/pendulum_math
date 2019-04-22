@@ -8,10 +8,7 @@ function init() {
   if (!body) {
     throw new Error('no body');
   }
-  const {
-    height,
-    width,
-  } = body.getBoundingClientRect();
+  const {height, width} = body.getBoundingClientRect();
   canvas.height = height;
   canvas.width = width;
 
@@ -22,14 +19,7 @@ function init() {
 
 const trail = [];
 
-function draw(
-  ctx,
-  width,
-  height,
-  {theta1, theta2},
-  {L1, L2},
-  color,
-) {
+function draw(ctx, width, height, {theta1, theta2}, {L1, L2}, color) {
   const center = [width / 2, height / 2];
   const x1 = L1 * Math.sin(theta1);
   const y1 = L1 * Math.cos(theta1);
@@ -75,20 +65,14 @@ function draw(
   }
 }
 
-function calcEnergy(
-  {theta1, theta2, theta1Dot, theta2Dot},
-  {L1, L2, m1, m2},
-) {
+function calcEnergy({theta1, theta2, theta1Dot, theta2Dot}, {L1, L2, m1, m2}) {
   const kineticEnergy =
-    0.5 *
-    (m1 * (L1 * theta1Dot) ** 2 +
-      m2 * (L2 * theta2Dot) ** 2);
+    0.5 * (m1 * (L1 * theta1Dot) ** 2 + m2 * (L2 * theta2Dot) ** 2);
   const y1 = L1 * Math.cos(theta1);
   const y2 = L2 * Math.cos(theta1 + theta2);
   const height1 = L1 - y1;
   const height2 = L1 + L2 - (y1 + y2);
-  const potentialEnergy =
-    9.8 * (m1 * height1 + m2 * height2);
+  const potentialEnergy = 9.8 * (m1 * height1 + m2 * height2);
   return kineticEnergy + potentialEnergy;
 }
 
@@ -108,36 +92,18 @@ function makeCompareFunction(name) {
     if (print) {
       const diff = max - min;
       const average = (max + min) / 2;
-      const pct =
-        Math.round((diff / average) * 1000000) /
-        10000;
-      console.log(
-        `${name} @ ${i}: ${max} - ${min} = ${max -
-          min}, ±${pct}%`,
-      );
+      const pct = Math.round((diff / average) * 1000000) / 10000;
+      console.log(`${name} @ ${i}: ${max} - ${min} = ${max - min}, ±${pct}%`);
     }
   };
 }
 
-function makePendulum(
-  name,
-  color,
-  step,
-  initialConditions,
-  config,
-) {
+function makePendulum(name, color, step, initialConditions, config) {
   const compareEnergy = makeCompareFunction(name);
   let state = {...initialConditions};
   return {
     draw(ctx, width, height) {
-      draw(
-        ctx,
-        width,
-        height,
-        state,
-        config,
-        color,
-      );
+      draw(ctx, width, height, state, config, color);
     },
     step(i, dt, mass, L) {
       state = step(state, config, dt);
@@ -157,16 +123,9 @@ let add = (...vectors) =>
   });
 let mult = (x, a) => a.map(e => e * x);
 
-function stepRungeKutta(
-  {theta1, theta2, theta1Dot, theta2Dot},
-  config,
-  h,
-) {
+function stepRungeKutta({theta1, theta2, theta1Dot, theta2Dot}, config, h) {
   let f = (dt, y) => {
-    const {
-      theta1DotDot,
-      theta2DotDot,
-    } = calcThetaDotDots(
+    const {theta1DotDot, theta2DotDot} = calcThetaDotDots(
       {
         theta1: y[0],
         theta2: y[1],
@@ -185,27 +144,13 @@ function stepRungeKutta(
 
   // https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods#The_Runge%E2%80%93Kutta_method
   const k1 = mult(h, f(0, yn));
-  const k2 = mult(
-    h,
-    f(h / 2, add(yn, mult(0.5, k1))),
-  );
-  const k3 = mult(
-    h,
-    f(h / 2, add(yn, mult(0.5, k2))),
-  );
+  const k2 = mult(h, f(h / 2, add(yn, mult(0.5, k1))));
+  const k3 = mult(h, f(h / 2, add(yn, mult(0.5, k2))));
   const k4 = mult(h, f(h, add(yn, k3)));
 
-  const [
-    theta1Next,
-    theta2Next,
-    theta1DotNext,
-    theta2DotNext,
-  ] = add(
+  const [theta1Next, theta2Next, theta1DotNext, theta2DotNext] = add(
     yn,
-    mult(
-      1 / 6,
-      add(k1, mult(2, k2), mult(2, k3), k4),
-    ),
+    mult(1 / 6, add(k1, mult(2, k2), mult(2, k3), k4)),
   );
 
   return {
