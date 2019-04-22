@@ -78,5 +78,23 @@ theta1DotDot = solve(
     Derivative(theta2, (t, 2)),
 )[Derivative(theta1, (t, 2))]
 
+theta1Symbol, theta2Symbol, theta1DotSymbol, theta2DotSymbol, theta1DotDotSymbol = symbols('theta1 theta2 theta1Dot theta2Dot theta1DotDot');
+
+theta1DotDot = theta1DotDot.subs([
+    (Derivative(theta1, t), theta1DotSymbol),
+    (Derivative(theta2, t), theta2DotSymbol),
+    (Derivative(theta1DotSymbol, t), theta1DotDotSymbol),
+    (theta1, theta1Symbol),
+    (theta2, theta2Symbol),
+])
+
+theta2DotDot = theta2DotDot.subs([
+    (Derivative(theta1, t), theta1DotSymbol),
+    (Derivative(theta2, t), theta2DotSymbol),
+    (Derivative(theta1DotSymbol, t), theta1DotDotSymbol),
+    (theta1, theta1Symbol),
+    (theta2, theta2Symbol),
+])
+
 printJS('theta1DotDot', theta1DotDot)
 printJS('theta2DotDot', theta2DotDot)
