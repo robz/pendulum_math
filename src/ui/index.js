@@ -1,6 +1,8 @@
+/* @flow */
+
 function init() {
   const canvas = document.getElementById('canvas');
-  if (!canvas || !canvas.getContext) {
+  if (!(canvas instanceof HTMLCanvasElement)) {
     throw new Error('no canvas or context');
   }
 
@@ -17,7 +19,7 @@ function init() {
   return {ctx, width, height};
 }
 
-const trail = [];
+const trail: Array<[number, number]> = [];
 
 function draw(ctx, width, height, {theta1, theta2}, {L1, L2}, color) {
   const center = [width / 2, height / 2];
@@ -113,7 +115,7 @@ function makePendulum(name, color, step, initialConditions, config) {
   };
 }
 
-let add = (...vectors) =>
+let add = (...vectors: Array<Array<number>>) =>
   vectors[0].map((_, i) => {
     let sum = 0;
     for (const vector of vectors) {
@@ -121,7 +123,28 @@ let add = (...vectors) =>
     }
     return sum;
   });
-let mult = (x, a) => a.map(e => e * x);
+let mult = (x, a: Array<number>) => a.map(e => e * x);
+
+declare function calcThetaDotDots(
+  {
+    theta1: number,
+    theta2: number,
+    theta1Dot: number,
+    theta2Dot: number,
+  },
+  {
+    L1: number,
+    L2: number,
+    m1: number,
+    m2: number,
+  },
+  {
+    F: number,
+  },
+): {
+  theta1DotDot: number,
+  theta2DotDot: number,
+};
 
 function stepRungeKutta({theta1, theta2, theta1Dot, theta2Dot}, config, h) {
   let f = (dt, y) => {
