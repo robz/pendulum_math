@@ -2,7 +2,7 @@ f=$(mktemp).js
 
 echo 'deriving...'
 
-python3 src/equations/pendulum_math.py > $f
+python3.7 src/equations/pendulum_math.py > $f
 
 echo 'result:'
 

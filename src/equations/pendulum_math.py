@@ -2,22 +2,22 @@
 from sympy import *
 from print_js import printJS
 
-(t, g) = symbols('t, g') # time, gravity
-(L1, L2) = symbols('L1:3') # lengths of bars
-(m1, m2) = symbols('m1:3') # point masses
-(a1, a2) = symbols('a1:3') # base basis
-(T1, T2) = symbols('T1:3') # tensions
-F = Symbol('F') # acrobot force
+(t, g) = symbols("t, g")  # time, gravity
+(L1, L2) = symbols("L1:3")  # lengths of bars
+(m1, m2) = symbols("m1:3")  # point masses
+(a1, a2) = symbols("a1:3")  # base basis
+(T1, T2) = symbols("T1:3")  # tensions
+F = Symbol("F")  # acrobot force
 
 # angles
-theta1 = Function('theta1')(t)
-theta2 = Function('theta2')(t)
+theta1 = Function("theta1")(t)
+theta2 = Function("theta2")(t)
 
 # basis at each joint
-b1 = Function('b1')(t)
-b2 = Function('b2')(t)
-c1 = Function('c1')(t)
-c2 = Function('c2')(t)
+b1 = Function("b1")(t)
+b2 = Function("b2")(t)
+c1 = Function("c1")(t)
+c2 = Function("c2")(t)
 
 # conversion between basis
 b1aexp = a1 * cos(theta1) + a2 * sin(theta1)
@@ -42,31 +42,17 @@ eq1 = Eq(m2 * accelR, m2 * g * a1 - T2 * c1 + F * c2)
 eq2 = Eq(m1 * accelQ, m1 * g * a1 - T1 * b1 + T2 * c1)
 
 # convert from basis b and c to basis a, and execute derivatives
-eq1 = eq1.subs([
-    (b1, b1aexp),
-    (b2, b2aexp),
-    (c1, c1aexp),
-    (c2, c2aexp),
-]).doit()
-eq2 = eq2.subs([
-    (b1, b1aexp),
-    (b2, b2aexp),
-    (c1, c1aexp),
-    (c2, c2aexp),
-]).doit()
+eq1 = eq1.subs([(b1, b1aexp), (b2, b2aexp), (c1, c1aexp), (c2, c2aexp)]).doit()
+eq2 = eq2.subs([(b1, b1aexp), (b2, b2aexp), (c1, c1aexp), (c2, c2aexp)]).doit()
 
 # expand to 4 equations for each basis (dot each with a1 and a2)
-eq3 = eq1.subs([(a1, 0), (a2, 1)]).simplify();
-eq4 = eq1.subs([(a1, 1), (a2, 0)]).simplify();
-eq5 = eq2.subs([(a1, 0), (a2, 1)]).simplify();
-eq6 = eq2.subs([(a1, 1), (a2, 0)]).simplify();
+eq3 = eq1.subs([(a1, 0), (a2, 1)]).simplify()
+eq4 = eq1.subs([(a1, 1), (a2, 0)]).simplify()
+eq5 = eq2.subs([(a1, 0), (a2, 1)]).simplify()
+eq6 = eq2.subs([(a1, 1), (a2, 0)]).simplify()
 
 # solve for T2 and theta2DotDot in terms of theta1DotDot
-res = solve(
-    [eq3, eq4],
-    T2,
-    Derivative(theta2, (t, 2)),
-)
+res = solve([eq3, eq4], T2, Derivative(theta2, (t, 2)))
 theta2DotDot = res[Derivative(theta2, (t, 2))]
 
 # solve for theta1DotDot
@@ -78,23 +64,29 @@ theta1DotDot = solve(
     Derivative(theta2, (t, 2)),
 )[Derivative(theta1, (t, 2))]
 
-theta1Symbol, theta2Symbol, theta1DotSymbol, theta2DotSymbol, theta1DotDotSymbol = symbols('theta1 theta2 theta1Dot theta2Dot theta1DotDot');
+theta1Symbol, theta2Symbol, theta1DotSymbol, theta2DotSymbol, theta1DotDotSymbol = symbols(
+    "theta1 theta2 theta1Dot theta2Dot theta1DotDot"
+)
 
-theta1DotDot = theta1DotDot.subs([
-    (Derivative(theta1, t), theta1DotSymbol),
-    (Derivative(theta2, t), theta2DotSymbol),
-    (Derivative(theta1DotSymbol, t), theta1DotDotSymbol),
-    (theta1, theta1Symbol),
-    (theta2, theta2Symbol),
-])
+theta1DotDot = theta1DotDot.subs(
+    [
+        (Derivative(theta1, t), theta1DotSymbol),
+        (Derivative(theta2, t), theta2DotSymbol),
+        (Derivative(theta1DotSymbol, t), theta1DotDotSymbol),
+        (theta1, theta1Symbol),
+        (theta2, theta2Symbol),
+    ]
+)
 
-theta2DotDot = theta2DotDot.subs([
-    (Derivative(theta1, t), theta1DotSymbol),
-    (Derivative(theta2, t), theta2DotSymbol),
-    (Derivative(theta1DotSymbol, t), theta1DotDotSymbol),
-    (theta1, theta1Symbol),
-    (theta2, theta2Symbol),
-])
+theta2DotDot = theta2DotDot.subs(
+    [
+        (Derivative(theta1, t), theta1DotSymbol),
+        (Derivative(theta2, t), theta2DotSymbol),
+        (Derivative(theta1DotSymbol, t), theta1DotDotSymbol),
+        (theta1, theta1Symbol),
+        (theta2, theta2Symbol),
+    ]
+)
 
-printJS('theta1DotDot', theta1DotDot)
-printJS('theta2DotDot', theta2DotDot)
+printJS("theta1DotDot", theta1DotDot)
+printJS("theta2DotDot", theta2DotDot)
